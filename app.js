@@ -85,7 +85,7 @@
       photo.classList.remove("is-leaving");
 
       label.textContent = "再抽一張";
-      status.textContent = `第 ${count} 抽・也可以按空白鍵抽換`;
+      status.textContent = `第 ${count} 抽`;
     } catch {
       preloaded.delete(src);
       photo.classList.remove("is-leaving");
@@ -99,14 +99,6 @@
   }
 
   button.addEventListener("click", draw);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.target === button) return;
-    if (e.code === "Space" || e.key === "Enter") {
-      e.preventDefault();
-      draw();
-    }
-  });
 
   fetch("images.json", { cache: "no-cache" })
     .then((res) => {
