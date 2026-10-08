@@ -50,6 +50,17 @@
     return preloaded.get(src);
   }
 
+  async function warmCache(list) {
+    for (const src of list) {
+      if (preloaded.has(src)) continue;
+      await new Promise((resolve) => {
+        const img = new Image();
+        img.onload = img.onerror = resolve;
+        img.src = src;
+      });
+    }
+  }
+
   function wait(ms) {
     return new Promise((r) => setTimeout(r, ms));
   }
@@ -113,7 +124,10 @@
       }
       button.disabled = false;
       next = take();
-      preload(next).catch(() => preloaded.delete(next));
+      const upcoming = bag.slice();
+      preload(next)
+        .catch(() => preloaded.delete(next))
+        .then(() => warmCache(upcoming));
     })
     .catch(() => {
       status.textContent = "圖片清單載入失敗，請重新整理頁面";

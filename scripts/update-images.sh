@@ -10,7 +10,7 @@ shopt -s nullglob nocaseglob
 for f in images/*.png images/*.jpg images/*.jpeg; do
   base=$(basename "${f%.*}")
   slug=$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-|-$//g')
-  cwebp -quiet -q 85 "$f" -o "images/$slug.webp"
+  cwebp -quiet -q 70 -m 6 -sharp_yuv "$f" -o "images/$slug.webp"
   mv "$f" originals/
   echo "converted: $f -> images/$slug.webp"
 done
