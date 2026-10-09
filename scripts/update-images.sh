@@ -9,7 +9,8 @@ shopt -s nullglob nocaseglob
 
 for f in images/*.png images/*.jpg images/*.jpeg; do
   base=$(basename "${f%.*}")
-  slug=$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-|-$//g')
+  slug=$(printf '%s' "$base" | perl -CSD -pe '$_ = lc; s/[^\p{L}\p{N}]+/-/g; s/^-+|-+$//g')
+  [ -n "$slug" ] || slug="image-$(date +%s)"
   cwebp -quiet -q 70 -m 6 -sharp_yuv "$f" -o "images/$slug.webp"
   mv "$f" originals/
   echo "converted: $f -> images/$slug.webp"
